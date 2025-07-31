@@ -1,0 +1,173 @@
+CREATE TABLE Primary_User (
+    User_ID INT auto_increment PRIMARY KEY,
+    User_Name VARCHAR(255),
+    User_Email VARCHAR(255),
+    User_Address VARCHAR(255),
+    User_Contact VARCHAR(255),
+    User_Birth_Date DATE
+);
+
+CREATE TABLE Medication (
+    Medication_ID INT auto_increment PRIMARY KEY,
+    Medication_Name VARCHAR(255),
+    Medication_Category VARCHAR(255),
+    Dosage VARCHAR(255),
+    Time_Of_Usage VARCHAR(255),
+    Medication_Pharmaceutical_Form VARCHAR(20)
+);
+
+CREATE TABLE Legal_Entity_Institute (
+    CNPJ VARCHAR(18) UNIQUE,
+    fk_User_ID INT PRIMARY KEY,
+    Institute_ID INT
+);
+
+CREATE TABLE Natural_Person (
+    CPF VARCHAR(14) UNIQUE,
+    fk_User_ID INT PRIMARY KEY
+);
+
+CREATE TABLE Supplier (
+    Supplier_ID INT auto_increment PRIMARY KEY,
+    Supplier_Name VARCHAR(255),
+    Supplier_Address VARCHAR(255),
+    Supplier_Contact VARCHAR(255),
+    fk_Institute_ID INT
+);
+
+CREATE TABLE Customer (
+    Customer_ID INT auto_increment PRIMARY KEY,
+    fk_User_ID INT,
+    fk_Institute_ID INT
+);
+
+CREATE TABLE Appointment_Book_Natural_Person (
+    Appointment_ID INT PRIMARY KEY,
+    Appointment_End_Date DATE,
+    Appointment_Start_Date DATE,
+    fk_Natural_Person_ID INT,
+    fk_Medication_ID INT
+);
+
+CREATE TABLE Appointment_Book_Institute (
+    Appointment_ID INT auto_increment PRIMARY KEY,
+    Appointment_End_Date DATE,
+    Appointment_Start_Date DATE,
+    fk_Medication_ID INT,
+    fk_Institute_ID INT
+);
+
+CREATE TABLE Institutional_Stock (
+    Institutional_Stock_ID INT auto_increment PRIMARY KEY,
+    fk_Institute_ID INT,
+    fk_Medication_ID INT
+);
+
+CREATE TABLE Supplier_Stock (
+    Supplier_Stock_ID INT auto_increment PRIMARY KEY,
+    fk_Supplier_ID INT,
+    fk_Medication_ID INT
+);
+
+CREATE TABLE Fiscal_Note (
+    Fiscal_Note_ID INT auto_increment PRIMARY KEY,
+    fk_Medication_ID INT,
+    fk_Natural_Person_ID INT
+);
+
+CREATE TABLE Reminder_Institute (
+    Reminder_ID INT  auto_increment PRIMARY KEY,
+    Reminder_Time DATE,
+    Reminder_Observations VARCHAR(255),
+    Reminder_Status BOOLEAN,
+    fk_Appointment_Book_Institute_ID INT,
+    fk_Customer_ID INT
+);
+
+CREATE TABLE Reminder_Natural_Person (
+    Reminder_ID INT auto_increment PRIMARY KEY,
+    Reminder_Time DATE,
+    Reminder_Observation VARCHAR(255),
+    Reminder_Status BOOLEAN,
+    fk_Appointment_Book_Natural_Person_ID INT,
+    fk_Natural_Person_ID INT
+);
+ 
+ALTER TABLE Legal_Entity_Institute ADD CONSTRAINT FK_Legal_Entity_Institute_2
+    FOREIGN KEY (fk_User_ID)
+    REFERENCES Primary_User (User_ID)
+    ON DELETE CASCADE;
+ 
+ALTER TABLE Natural_Person ADD CONSTRAINT FK_Natural_Person_2
+    FOREIGN KEY (fk_User_ID)
+    REFERENCES Primary_User (User_ID)
+    ON DELETE CASCADE;
+ 
+ALTER TABLE Supplier ADD CONSTRAINT FK_Supplier_2
+    FOREIGN KEY (fk_Institute_ID)
+    REFERENCES Legal_Entity_Institute (fk_User_ID)
+    ON DELETE CASCADE;
+ 
+ALTER TABLE Customer ADD CONSTRAINT FK_Customer_2
+    FOREIGN KEY (fk_User_ID)
+    REFERENCES Natural_Person (fk_User_ID);
+ 
+ALTER TABLE Customer ADD CONSTRAINT FK_Customer_3
+    FOREIGN KEY (fk_Institute_ID)
+    REFERENCES Legal_Entity_Institute (fk_User_ID);
+ 
+ALTER TABLE Appointment_Book_Natural_Person ADD CONSTRAINT FK_Appointment_Book_Natural_Person_2
+    FOREIGN KEY (fk_Natural_Person_ID)
+    REFERENCES Natural_Person (fk_User_ID);
+ 
+ALTER TABLE Appointment_Book_Natural_Person ADD CONSTRAINT FK_Appointment_Book_Natural_Person_3
+    FOREIGN KEY (fk_Medication_ID)
+    REFERENCES Medication (Medication_ID);
+ 
+ALTER TABLE Appointment_Book_Institute ADD CONSTRAINT FK_Appointment_Book_Institute_2
+    FOREIGN KEY (fk_Medication_ID)
+    REFERENCES Medication (Medication_ID);
+ 
+ALTER TABLE Appointment_Book_Institute ADD CONSTRAINT FK_Appointment_Book_Institute_3
+    FOREIGN KEY (fk_Institute_ID)
+    REFERENCES Legal_Entity_Institute (fk_User_ID);
+ 
+ALTER TABLE Institutional_Stock ADD CONSTRAINT FK_Institutional_Stock_2
+    FOREIGN KEY (fk_Institute_ID)
+    REFERENCES Legal_Entity_Institute (fk_User_ID);
+ 
+ALTER TABLE Institutional_Stock ADD CONSTRAINT FK_Institutional_Stock_3
+    FOREIGN KEY (fk_Medication_ID)
+    REFERENCES Medication (Medication_ID);
+ 
+ALTER TABLE Supplier_Stock ADD CONSTRAINT FK_Supplier_Stock_2
+    FOREIGN KEY (fk_Supplier_ID)
+    REFERENCES Supplier (Supplier_ID);
+ 
+ALTER TABLE Supplier_Stock ADD CONSTRAINT FK_Supplier_Stock_3
+    FOREIGN KEY (fk_Medication_ID)
+    REFERENCES Medication (Medication_ID);
+ 
+ALTER TABLE Fiscal_Note ADD CONSTRAINT FK_Fiscal_Note_2
+    FOREIGN KEY (fk_Medication_ID)
+    REFERENCES Medication (Medication_ID);
+ 
+ALTER TABLE Fiscal_Note ADD CONSTRAINT FK_Fiscal_Note_3
+    FOREIGN KEY (fk_Natural_Person_ID)
+    REFERENCES Natural_Person (fk_User_ID);
+ 
+ALTER TABLE Reminder_Institute ADD CONSTRAINT FK_Reminder_Institute_2
+    FOREIGN KEY (fk_Appointment_Book_Institute_ID)
+    REFERENCES Appointment_Book_Institute (Appointment_ID);
+ 
+ALTER TABLE Reminder_Institute ADD CONSTRAINT FK_Reminder_Institute_3
+    FOREIGN KEY (fk_Customer_ID)
+    REFERENCES Customer (Customer_ID);
+ 
+ALTER TABLE Reminder_Natural_Person ADD CONSTRAINT FK_Reminder_Natural_Person_2
+    FOREIGN KEY (fk_Appointment_Book_Natural_Person_ID)
+    REFERENCES Appointment_Book_Natural_Person (Appointment_ID);
+ 
+ALTER TABLE Reminder_Natural_Person ADD CONSTRAINT FK_Reminder_Natural_Person_3
+    FOREIGN KEY (fk_Natural_Person_ID)
+    REFERENCES Natural_Person (fk_User_ID);

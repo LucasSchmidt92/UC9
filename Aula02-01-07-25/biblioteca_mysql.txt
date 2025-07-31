@@ -1,0 +1,33 @@
+CREATE TABLE aluno (
+    id_Aluno INT auto_increment PRIMARY KEY NOT NULL,
+    nome_Aluno VARCHAR(255) NOT NULL,
+    idade_Aluno INT NOT NULL,
+    contato_Aluno VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE livro (
+    id_Livro INT auto_increment PRIMARY KEY NOT NULL,
+    titulo_Livro VARCHAR(255) NOT NULL,
+    autor_Livro VARCHAR(255) NOT NULL,
+    genero_Livro VARCHAR(255) NOT NULL,
+	isbn_Livro VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE emprestimo (
+	fk_id_Livro INT NOT NULL,
+	fk_id_Aluno INT NOT NULL,
+    data_emprestimo VARCHAR(255) NOT NULL,
+    data_Devolucao VARCHAR(255) NOT NULL
+);
+
+ALTER TABLE emprestimo ADD CONSTRAINT fk_id_Livro
+    FOREIGN KEY (fk_id_Livro)
+    REFERENCES livro (id_Livro)
+    ON DELETE CASCADE;
+	
+ALTER TABLE emprestimo ADD CONSTRAINT fk_id_Aluno
+    FOREIGN KEY (fk_id_Aluno)
+    REFERENCES aluno (id_Aluno)
+    ON DELETE CASCADE;
+	
+select * from aluno;

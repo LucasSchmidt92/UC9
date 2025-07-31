@@ -1,0 +1,19 @@
+insert into Primary_User(User_Name, User_Email, User_Address, User_Contact, User_Birth_Date) 
+values ('Lucca Fagundes', 'luccafagundes@gmail.com', 'Rua qualquer coisa', '51984045022', '2003-12-20'),
+('Lucas Schmidt', 'lucas_schmidt92@hotmail.com', 'Rua 25 de Julho', '51994138153', '1992-08-02'),
+('Gabriel Garcez', 'gabriel_garcez@gmail.com', 'Proximo a avenida imperatriz', '5199999999', '2006-04-18'),
+('Ash Ketchum', 'ashdealola_100pikachu@rotoomail.com', 'Cidade Pallet', '58984045022', '2003-12-29');
+
+insert into Natural_Person (CPF, fk_User_ID) 
+values ('051.375.440-78', 1),
+('051.375.440-77', 2),
+('051.375.440-76', 3),
+('051.375.440-79', 4);
+
+insert into Medication (Medication_Name, Medication_Category, Dosage, Time_Of_Usage, Medication_Pharmaceutical_Form)
+values ('Dipirona', 'Sem receita', '1g', '6/6 horas', 'Gotas'),
+('Sertralina', 'Com receita', '50mg', '1 vez ao dia', 'Comprimido');
+
+select * from Primary_User;
+select * from Natural_Person;
+select * from Medication;
