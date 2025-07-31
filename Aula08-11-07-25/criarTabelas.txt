@@ -1,0 +1,22 @@
+    public static void criarTabelas(){
+        String sql = "CREATE TABLE IF NOT EXISTS teste(id INT NOT NULL, nome VARCHAR(20) NOT NULL)";
+        Connection conexao = null;
+        PreparedStatement stmt = null;
+
+        try (Connection connection = DriverManager.getConnection(URL, usuario, senha);
+             Statement statement = connection.createStatement()) {
+
+            statement.executeUpdate(sql);
+            System.out.println("Tabela criada com sucesso!");
+
+        } catch (SQLException e) {
+            System.err.println("Erro ao criar a tabela: " + e.getMessage());
+        } finally {
+            try{
+                if (stmt != null) stmt.close();
+                if(conexao != null) fecharConexao(conexao);
+            } catch (SQLException error) {
+                System.err.println("Erro ao fechar conexao: " + error.getMessage());
+            }
+        }
+    }
