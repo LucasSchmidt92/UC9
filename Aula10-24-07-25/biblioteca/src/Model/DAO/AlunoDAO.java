@@ -86,6 +86,7 @@ public class AlunoDAO {
             conexao = ConexaoPostgresDB.conectar();
             if (conexao != null) {
                 stmt = conexao.prepareStatement(sql);
+                stmt.setInt(1, id);
                 rs = stmt.executeQuery();
                 System.out.println("\n--- Alunos cadastrados no BD ---");
                 while (rs.next()) {
@@ -120,6 +121,7 @@ public class AlunoDAO {
             conexao = ConexaoPostgresDB.conectar();
             if (conexao != null) {
                 stmt = conexao.prepareStatement(sql);
+                stmt.setString(1, nome);
                 rs = stmt.executeQuery();
                 System.out.println("\n--- Alunos cadastrados no BD ---");
                 while (rs.next()) {

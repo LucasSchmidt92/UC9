@@ -1,6 +1,9 @@
 package View;
 
+import Controller.AlunoController;
 import Controller.EmprestimoController;
+import Controller.LivroController;
+import Model.DAO.LivroDAO;
 import Model.Emprestimo;
 
 import javax.swing.*;
@@ -23,7 +26,7 @@ public class ListaEmprestimos extends JInternalFrame {
         setSize(850, 500);
         setLayout(new BorderLayout());
 
-        String[] colunas = {"ID", "ID do Livro", "ID do Aluno", "Data do Empréstimo", "Data de Devolução"};
+        String[] colunas = {"ID", "Titulo do Livro", "Nome do Aluno", "Data do Empréstimo", "Data de Devolução"};
         tableModel = new DefaultTableModel(colunas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -37,15 +40,15 @@ public class ListaEmprestimos extends JInternalFrame {
         JPanel panelAcoes = new JPanel(new FlowLayout(FlowLayout.LEFT));
         txtBuscaIdAluno = new JTextField(5);
         txtBuscaIdLivro = new JTextField(5);
-        btnBuscarPorAluno = new JButton("Buscar por Id Aluno");
-        btnBuscarPorLivro = new JButton("Buscar por Id Livro");
+        btnBuscarPorAluno = new JButton("Buscar por Nome Aluno(a)");
+        btnBuscarPorLivro = new JButton("Buscar por Titulo Livro");
         btnAtualizar = new JButton("Atualizar Tabela");
         btnRemover = new JButton("Remover Selecionado");
 
-        panelAcoes.add(new JLabel("Id Aluno:"));
+        panelAcoes.add(new JLabel("Nome do Aluno(a):"));
         panelAcoes.add(txtBuscaIdAluno);
         panelAcoes.add(btnBuscarPorAluno);
-        panelAcoes.add(new JLabel("Id Livro:"));
+        panelAcoes.add(new JLabel("Titulo do Livro:"));
         panelAcoes.add(txtBuscaIdLivro);
         panelAcoes.add(btnBuscarPorLivro);
         panelAcoes.add(btnAtualizar);
@@ -98,27 +101,28 @@ public class ListaEmprestimos extends JInternalFrame {
     }
 
     private void buscarEmprestimosPorIDAluno() {
-        String idBusca = txtBuscaIdAluno.getText().trim(); // Obtém o texto do campo de busca
+        String nomeBusca = txtBuscaIdAluno.getText().trim(); // Obtém o texto do campo de busca
         tableModel.setRowCount(0); // Limpa a tabela
+        LivroController livro = new LivroController();
 
         List<Emprestimo> emprestimos;
-        if (idBusca.isEmpty()) {
+        if (nomeBusca.isEmpty()) {
             // Se o campo de busca estiver vazio, lista todos
             emprestimos = controller.listarEmprestimos();
         } else {
             // Caso contrário, busca por nome
-            emprestimos = controller.getEmprestimosByAluno(Integer.parseInt(idBusca));
+            emprestimos = controller.getEmprestimosByAluno(nomeBusca);
         }
 
-        if (emprestimos.isEmpty() && !idBusca.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Nenhum empréstimo encontrado com o ID de Aluno: '" + idBusca + "'", "Busca", JOptionPane.INFORMATION_MESSAGE);
+        if (emprestimos.isEmpty() && !nomeBusca.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nenhum empréstimo encontrado com o ID de Aluno: '" + nomeBusca + "'", "Busca", JOptionPane.INFORMATION_MESSAGE);
         }
 
         for (Emprestimo emprestimo : emprestimos) {
             tableModel.addRow(new Object[]{
                     emprestimo.getId_emprestimo(),
-                    emprestimo.getFk_livro(),
-                    emprestimo.getFk_aluno(),
+                    livro.getLivroById(emprestimo.getFk_livro()).getTitulo(),
+                    nomeBusca,
                     emprestimo.getData_emprestimo(),
                     emprestimo.getData_devolucao()
             });
@@ -126,27 +130,28 @@ public class ListaEmprestimos extends JInternalFrame {
     }
 
     private void buscarEmprestimosPorIDLivro() {
-        String idBusca = txtBuscaIdLivro.getText().trim(); // Obtém o texto do campo de busca
+        String tituloBusca = txtBuscaIdLivro.getText().trim(); // Obtém o texto do campo de busca
         tableModel.setRowCount(0); // Limpa a tabela
+        AlunoController aluno = new AlunoController();
 
         List<Emprestimo> emprestimos;
-        if (idBusca.isEmpty()) {
+        if (tituloBusca.isEmpty()) {
             // Se o campo de busca estiver vazio, lista todos
             emprestimos = controller.listarEmprestimos();
         } else {
             // Caso contrário, busca por nome
-            emprestimos = controller.getEmprestimosByLivro(Integer.parseInt(idBusca));
+            emprestimos = controller.getEmprestimosByLivro(tituloBusca);
         }
 
-        if (emprestimos.isEmpty() && !idBusca.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Nenhum emprestimo encontrado com o ID de Livro: '" + idBusca + "'", "Busca", JOptionPane.INFORMATION_MESSAGE);
+        if (emprestimos.isEmpty() && !tituloBusca.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nenhum emprestimo encontrado com o ID de Livro: '" + tituloBusca + "'", "Busca", JOptionPane.INFORMATION_MESSAGE);
         }
 
         for (Emprestimo emprestimo : emprestimos) {
             tableModel.addRow(new Object[]{
                     emprestimo.getId_emprestimo(),
-                    emprestimo.getFk_livro(),
-                    emprestimo.getFk_aluno(),
+                    tituloBusca,
+                    aluno.getAlunoById(emprestimo.getFk_aluno()).getNome(),
                     emprestimo.getData_emprestimo(),
                     emprestimo.getData_devolucao()
             });
