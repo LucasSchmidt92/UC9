@@ -28,7 +28,7 @@ public class ConexaoPostgresDB {
                 conexao.close();
                 System.out.println("Conexao fechada com sucesso!");
             } catch (SQLException error) {
-                System.err.println("Erro ao fechar conexao: " + error.getMessage());
+                System.err.println("Erro ao fechar conexao!: " + error.getMessage());
             }
         }
     }
